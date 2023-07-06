@@ -5,8 +5,7 @@ import org.pahappa.systems.ticketing.models.Ticket;
 import org.pahappa.systems.ticketing.services.TicketService;
 import org.pahappa.systems.ticketing.services.impl.TicketServiceImpl;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class TicketView implements BaseTicketView {
 
@@ -70,8 +69,16 @@ public class TicketView implements BaseTicketView {
     public void createTicket() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter ticket id:");
-        int ticketId = scanner.nextInt();
-        scanner.nextLine();
+        int ticketId;
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.matches("\\d+")) {
+                ticketId = Integer.parseInt(input);
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter a valid ticket id:");
+            }
+        }
         System.out.println("Enter ticket name:");
         String ticketName = scanner.nextLine();
         System.out.println("Enter issue description:");
@@ -80,19 +87,57 @@ public class TicketView implements BaseTicketView {
         System.out.println("1. Open");
         System.out.println("2. In Progress");
         System.out.println("3. Resolved");
-        int status = scanner.nextInt();
+        int status;
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.matches("\\d+")) {
+                status = Integer.parseInt(input);
+                if (status >= 1 && status <= 3) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please choose a number from the menu above:");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid ticket status:");
+            }
+        }
         System.out.println("Enter ticket priority:");
         System.out.println("1. Low");
         System.out.println("2. Medium");
         System.out.println("3. High");
-        int priority = scanner.nextInt();
+        int priority;
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.matches("\\d+")) {
+                priority = Integer.parseInt(input);
+                if (priority >= 1 && priority <= 3) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please choose a number from the menu above:");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid ticket priority:");
+            }
+        }
         System.out.println("Enter ticket category:");
         System.out.println("1. Mobile money service");
         System.out.println("2. SIM Card and Activation");
-        System.out.println("3. Data and Internet");
+        System.out.println("3. Voice and Internet bundles");
         System.out.println("4. Speak to one of us");
-        int category = scanner.nextInt();
-        scanner.nextLine();
+        int category;
+        while (true) {
+            String input = scanner.nextLine();
+            if (input.matches("\\d+")) {
+                category = Integer.parseInt(input);
+                if (category >= 1 && category <= 4) {
+                    break;
+                } else {
+                    System.out.println("Invalid input. Please enter a valid ticket category:");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid ticket category:");
+            }
+        }
         System.out.println("Enter Agent Name:");
         String agentName = scanner.nextLine();
 
@@ -100,10 +145,11 @@ public class TicketView implements BaseTicketView {
         ticketService.createTicket(ticket);
 
         System.out.println("Ticket created successfully.");
+
     }
 
     public void getAllTickets() {
-        
+
     }
 
     @Override
