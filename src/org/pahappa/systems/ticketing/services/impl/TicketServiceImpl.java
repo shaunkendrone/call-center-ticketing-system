@@ -4,13 +4,18 @@ import org.pahappa.systems.ticketing.constants.TicketStatus;
 import org.pahappa.systems.ticketing.models.Ticket;
 import org.pahappa.systems.ticketing.services.TicketService;
 
-import java.util.List;
+import java.util.*;
+
+
 
 public class TicketServiceImpl implements TicketService {
+    
+        List<Ticket> ticketsList = new ArrayList<>();
+
 
     @Override
     public void createTicket(Ticket ticket) {
-
+        ticketsList.add(ticket);
     }
 
     @Override
@@ -20,6 +25,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> getTicketsOfStatus(TicketStatus ticketStatus) {
+        
         return null;
     }
 
