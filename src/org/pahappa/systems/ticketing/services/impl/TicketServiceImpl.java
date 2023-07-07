@@ -17,22 +17,43 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> getAllTickets() {
-        return null;
+        return ticketsList;
     }
 
     @Override
     public List<Ticket> getTicketsOfStatus(TicketStatus ticketStatus) {
-        return null;
+        List<Ticket> myList = new ArrayList<>();
+        for (Ticket ticket : ticketsList) {
+            if (ticket.getStatus() == (ticketStatus.ordinal() + 1)) {
+                myList.add(ticket);
+            }
+        }
+        return myList;
     }
 
     @Override
     public void updateTicket(Ticket updatedTicket) {
-        
+        for (int i = 0; i < ticketsList.size(); i++) {
+            Ticket ticket = ticketsList.get(i);
+            if (ticket.getTicketId() == updatedTicket.getTicketId()) {
+
+                ticket.setTicketName(updatedTicket.getTicketName());
+                ticket.setIssueDescription(updatedTicket.getIssueDescription());
+                ticket.setCustomerName(updatedTicket.getCustomerName());
+                ticket.setCustomerContact(updatedTicket.getCustomerContact());
+                ticket.setStatus(updatedTicket.getStatus());
+                ticket.setPriority(updatedTicket.getPriority());
+                ticket.setCategory(updatedTicket.getCategory());
+                ticket.setAgentName(updatedTicket.getAgentName());
+            }
+        }
     }
 
     @Override
     public void deleteTicket(int index) {
-       
+        if (index >= 0 && index < ticketsList.size()) {
+            ticketsList.remove(index);
+        }
     }
 
 }
