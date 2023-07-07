@@ -93,10 +93,28 @@ public class TicketView implements BaseTicketView {
         }
     }
 
+    private boolean isTicketIdUsed(int ticketId) {
+        List<Ticket> tickets = ticketService.getAllTickets();
+        for (Ticket ticket : tickets) {
+            if (ticket.getTicketId() == ticketId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void createTicket() {
-        System.out.println("Enter ticket id:");
-        int ticketId = getValidIntegerInput(scanner);
+        int ticketId;
+        while (true) {
+            System.out.println("Enter ticket id:");
+            ticketId = getValidIntegerInput(scanner);
+            if (isTicketIdUsed(ticketId)) {
+                System.out.println("Ticket ID is already used. Please enter a unique ID.");
+            } else {
+                break;
+            }
+        }
         System.out.println("Enter ticket name:");
         String ticketName = scanner.nextLine();
         System.out.println("Enter issue description:");
@@ -133,7 +151,45 @@ public class TicketView implements BaseTicketView {
     }
 
     public void getAllTickets() {
+        List<Ticket> tickets = ticketService.getAllTickets();
+        if (tickets.isEmpty()) {
+            System.out.println("No tickets found");
+        } else {
+            System.out.println("********* All Tickets *********\n\n");
+            for (Ticket ticket : tickets) {
 
+                System.out.println("Ticket ID: " + ticket.getTicketId());
+                System.out.println("Ticket Name: " + ticket.getTicketName());
+                System.out.println("Issue Description: " + ticket.getIssueDescription());
+                System.out.println("Customer name: " + ticket.getCustomerName());
+                System.out.println("Customer contact: " + ticket.getCustomerContact());
+                if (ticket.getStatus() == 1) {
+                    System.out.println("Ticket Status: " + TicketStatus.OPEN);
+                } else if (ticket.getStatus() == 2) {
+                    System.out.println("Ticket Status: " + TicketStatus.INPROGRESS);
+                } else {
+                    System.out.println("Ticket Status: " + TicketStatus.RESOLVED);
+                }
+
+                if (ticket.getPriority() == 1) {
+                    System.out.println("Ticket Priority: Low");
+                } else if (ticket.getPriority() == 2) {
+                    System.out.println("Ticket Priority: Medium");
+                } else {
+                    System.out.println("Ticket Priority: High");
+                }
+
+                if (ticket.getCategory() == 1) {
+                    System.out.println("Ticket Category: Mobile money service");
+                } else if (ticket.getCategory() == 2) {
+                    System.out.println("Ticket Category: Voice and Internet bundles");
+                } else {
+                    System.out.println("Ticket Category: Speak to one of us");
+                }
+                System.out.println("Agent Name: " + ticket.getAgentName());
+                System.out.println("\n");
+            }
+        }
     }
 
     @Override
