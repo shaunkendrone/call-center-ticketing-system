@@ -17,6 +17,38 @@ public class TicketView implements BaseTicketView {
         this.scanner = new Scanner(System.in);
     }
 
+    public int getValidIntegerInput(Scanner myScanner) {
+        int input;
+        while (true) {
+            String myInput = myScanner.nextLine();
+            if (myInput.matches("\\d+")) {
+                input = Integer.parseInt(myInput);
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
+        }
+        return input;
+    }
+
+    public int getValidIntegerInput2(Scanner myScanner2) {
+        int input;
+        while (true) {
+            String myInput = myScanner2.nextLine();
+            if (myInput.matches("\\d+")) {
+                input = Integer.parseInt(myInput);
+                if (input >= 1 && input <= 3) {
+                    break;
+                } else {
+                    System.out.println("Invalid number. Please choose a number from 1 to 3.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
+        }
+        return input;
+    }
+
     @Override
     public void displayMenu() {
         System.out.println("********* Call Center Ticket System *********\n\n");
@@ -32,53 +64,39 @@ public class TicketView implements BaseTicketView {
             System.out.println();
 
             System.out.print("Enter your choice:");
-            String choice = scanner.nextLine();
-            if (choice.matches("\\d+")) {
-                int mychoice = Integer.parseInt(choice);
+            int choice = getValidIntegerInput(scanner);
 
-                switch (mychoice) {
-                    case 1:
-                        createTicket();
-                        break;
-                    case 2:
-                        getAllTickets();
-                        break;
-                    case 3:
-                        getTicketsOfStatus();
-                        break;
-                    case 4:
-                        updateTicket();
-                        break;
-                    case 5:
-                        deleteTicket();
-                        break;
-                    case 6:
-                        running = false;
-                        break;
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
+            switch (choice) {
+                case 1:
+                    createTicket();
+                    break;
+                case 2:
+                    getAllTickets();
+                    break;
+                case 3:
+                    getTicketsOfStatus();
+                    break;
+                case 4:
+                    updateTicket();
+                    break;
+                case 5:
+                    deleteTicket();
+                    break;
+                case 6:
+                    running = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
 
-                }
-            } else {
-                System.out.println("Invalid input please choose a number from the menu");
             }
+
         }
     }
 
     @Override
     public void createTicket() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Enter ticket id:");
-        int ticketId;
-        while (true) {
-            String input = scanner.nextLine();
-            if (input.matches("\\d+")) {
-                ticketId = Integer.parseInt(input);
-                break;
-            } else {
-                System.out.println("Invalid input. Please enter a valid ticket id:");
-            }
-        }
+        int ticketId = getValidIntegerInput(scanner);
         System.out.println("Enter ticket name:");
         String ticketName = scanner.nextLine();
         System.out.println("Enter issue description:");
@@ -87,64 +105,30 @@ public class TicketView implements BaseTicketView {
         System.out.println("1. Open");
         System.out.println("2. In Progress");
         System.out.println("3. Resolved");
-        int status;
-        while (true) {
-            String input = scanner.nextLine();
-            if (input.matches("\\d+")) {
-                status = Integer.parseInt(input);
-                if (status >= 1 && status <= 3) {
-                    break;
-                } else {
-                    System.out.println("Invalid input. Please choose a number from the menu above:");
-                }
-            } else {
-                System.out.println("Invalid input. Please enter a valid ticket status:");
-            }
-        }
+        int status = getValidIntegerInput2(scanner);
+        System.out.println("Enter customer name:");
+        String customerName = scanner.nextLine();
+        System.out.println("Enter customer contact:");
+        String customerContact = scanner.nextLine();
         System.out.println("Enter ticket priority:");
         System.out.println("1. Low");
         System.out.println("2. Medium");
         System.out.println("3. High");
-        int priority;
-        while (true) {
-            String input = scanner.nextLine();
-            if (input.matches("\\d+")) {
-                priority = Integer.parseInt(input);
-                if (priority >= 1 && priority <= 3) {
-                    break;
-                } else {
-                    System.out.println("Invalid input. Please choose a number from the menu above:");
-                }
-            } else {
-                System.out.println("Invalid input. Please enter a valid ticket priority:");
-            }
-        }
+        int priority = getValidIntegerInput2(scanner);
         System.out.println("Enter ticket category:");
         System.out.println("1. Mobile money service");
-        System.out.println("2. SIM Card and Activation");
-        System.out.println("3. Voice and Internet bundles");
-        System.out.println("4. Speak to one of us");
-        int category;
-        while (true) {
-            String input = scanner.nextLine();
-            if (input.matches("\\d+")) {
-                category = Integer.parseInt(input);
-                if (category >= 1 && category <= 4) {
-                    break;
-                } else {
-                    System.out.println("Invalid input. Please enter a valid ticket category:");
-                }
-            } else {
-                System.out.println("Invalid input. Please enter a valid ticket category:");
-            }
-        }
+        System.out.println("2. Voice and Internet bundles");
+        System.out.println("3. Speak to one of us");
+        int category = getValidIntegerInput2(scanner);
         System.out.println("Enter Agent Name:");
         String agentName = scanner.nextLine();
 
-        Ticket ticket = new Ticket(ticketId, ticketName, issueDescription, status, priority, category, agentName);
+        Ticket ticket = new Ticket(ticketId, ticketName, issueDescription, customerName, customerContact, status,
+                priority, category, agentName);
         ticketService.createTicket(ticket);
-
-        System.out.println("Ticket created successfully.");
+        System.out.println("+------------------------------+");
+        System.out.println("| Ticket created successfully. |");
+        System.out.println("+------------------------------+");
 
     }
 

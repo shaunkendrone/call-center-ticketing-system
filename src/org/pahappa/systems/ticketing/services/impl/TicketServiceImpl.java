@@ -6,12 +6,9 @@ import org.pahappa.systems.ticketing.services.TicketService;
 
 import java.util.*;
 
-
-
 public class TicketServiceImpl implements TicketService {
-    
-        List<Ticket> ticketsList = new ArrayList<>();
 
+    List<Ticket> ticketsList = new ArrayList<>();
 
     @Override
     public void createTicket(Ticket ticket) {
@@ -25,17 +22,17 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public List<Ticket> getTicketsOfStatus(TicketStatus ticketStatus) {
-        
         return null;
     }
 
     @Override
     public void updateTicket(Ticket updatedTicket) {
-
+        
     }
 
     @Override
     public void deleteTicket(int index) {
-
+       
     }
+
 }

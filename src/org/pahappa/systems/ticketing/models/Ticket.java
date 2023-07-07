@@ -7,18 +7,24 @@ package org.pahappa.systems.ticketing.models;
  * related to the user's request or issue.
  */
 public class Ticket {
+    // private static int lastAssignedId = 0;
     private int ticketId;
     private String ticketName;
     private String issueDescription;
+    private String customerName;
+    private String customerContact;
     private int status;
     private int priority;
     private int category;
     private String agentName;
         
-    public Ticket(int ticketId, String ticketName, String issueDescription, int status, int priority, int category, String agentName) {
-        this.ticketId = ticketId;
+    public Ticket(int ticketid,String ticketName, String issueDescription,String customerName,String customerContact, int status, int priority, int category, String agentName) {
+        // this.ticketId = ++lastAssignedId;
+        this.ticketId = ticketid;
         this.ticketName = ticketName;
         this.issueDescription = issueDescription;
+        this.customerName = customerName;
+        this.customerContact = customerContact;
         this.status = status;
         this.priority = priority;
         this.category = category;
@@ -47,6 +53,22 @@ public class Ticket {
 
     public void setIssueDescription(String issueDescription) {
         this.issueDescription = issueDescription;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerContact() {
+        return customerContact;
+    }
+
+    public void setCustomerContact(String customerContact) {
+        this.customerContact = customerContact;
     }
 
     public int getStatus() {
