@@ -51,9 +51,7 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void deleteTicket(int index) {
-        if (index >= 0 && index < ticketsList.size()) {
-            ticketsList.remove(index);
-        }
+        
     }
 
 }
