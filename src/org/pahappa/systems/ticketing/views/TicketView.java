@@ -1,9 +1,11 @@
 package org.pahappa.systems.ticketing.views;
 
+import org.pahappa.systems.ticketing.constants.TicketStatus;
+import org.pahappa.systems.ticketing.models.Ticket;
 import org.pahappa.systems.ticketing.services.TicketService;
 import org.pahappa.systems.ticketing.services.impl.TicketServiceImpl;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class TicketView implements BaseTicketView {
 
@@ -15,12 +17,44 @@ public class TicketView implements BaseTicketView {
         this.scanner = new Scanner(System.in);
     }
 
+    public int getValidIntegerInput(Scanner myScanner) {
+        int input;
+        while (true) {
+            String myInput = myScanner.nextLine();
+            if (myInput.matches("\\d+")) {
+                input = Integer.parseInt(myInput);
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
+        }
+        return input;
+    }
+
+    public int getValidIntegerInput2(Scanner myScanner2) {
+        int input;
+        while (true) {
+            String myInput = myScanner2.nextLine();
+            if (myInput.matches("\\d+")) {
+                input = Integer.parseInt(myInput);
+                if (input >= 1 && input <= 3) {
+                    break;
+                } else {
+                    System.out.println("Invalid number. Please choose a number from 1 to 3.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid integer.");
+            }
+        }
+        return input;
+    }
+
     @Override
     public void displayMenu() {
         System.out.println("********* Call Center Ticket System *********\n\n");
         boolean running = true;
         while (running) {
-            System.out.println("Choose an operation:");
+            System.out.println("\tChoose an operation:");
             System.out.println("1. Create Ticket");
             System.out.println("2. Get All Tickets");
             System.out.println("3. Get Tickets of Status");
@@ -29,8 +63,8 @@ public class TicketView implements BaseTicketView {
             System.out.println("6. Exit");
             System.out.println();
 
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
+            System.out.print("Enter your choice:");
+            int choice = getValidIntegerInput(scanner);
 
             switch (choice) {
                 case 1:
@@ -55,31 +89,315 @@ public class TicketView implements BaseTicketView {
                     System.out.println("Invalid choice. Please try again.");
 
             }
+
         }
+    }
+
+    private boolean isTicketIdUsed(int ticketId) {
+        List<Ticket> tickets = ticketService.getAllTickets();
+        for (Ticket ticket : tickets) {
+            if (ticket.getTicketId() == ticketId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public void createTicket() {
+        int ticketId;
+        while (true) {
+            System.out.println("Enter ticket id:");
+            ticketId = getValidIntegerInput(scanner);
+            if (isTicketIdUsed(ticketId)) {
+                System.out.println("Ticket ID is already used. Please enter a unique ID.");
+            } else {
+                break;
+            }
+        }
+        System.out.println("Enter ticket name:");
+        String ticketName = scanner.nextLine();
+        System.out.println("Enter issue description:");
+        String issueDescription = scanner.nextLine();
+        System.out.println("Choose ticket status:");
+        System.out.println("1. Open");
+        System.out.println("2. In Progress");
+        System.out.println("3. Resolved");
+        int status = getValidIntegerInput2(scanner);
+        System.out.println("Enter customer name:");
+        String customerName = scanner.nextLine();
+        System.out.println("Enter customer contact:");
+        String customerContact = scanner.nextLine();
+        System.out.println("Enter ticket priority:");
+        System.out.println("1. Low");
+        System.out.println("2. Medium");
+        System.out.println("3. High");
+        int priority = getValidIntegerInput2(scanner);
+        System.out.println("Enter ticket category:");
+        System.out.println("1. Mobile money service");
+        System.out.println("2. Voice and Internet bundles");
+        System.out.println("3. Speak to one of us");
+        int category = getValidIntegerInput2(scanner);
+        System.out.println("Enter Agent Name:");
+        String agentName = scanner.nextLine();
+
+        Ticket ticket = new Ticket(ticketId, ticketName, issueDescription, customerName, customerContact, status,
+                priority, category, agentName);
+        ticketService.createTicket(ticket);
+        System.out.println("+------------------------------+");
+        System.out.println("| Ticket created successfully. |");
+        System.out.println("+------------------------------+");
 
     }
 
-    @Override
     public void getAllTickets() {
+        List<Ticket> tickets = ticketService.getAllTickets();
+        if (tickets.isEmpty()) {
+            System.out.println("No tickets found");
+        } else {
+            System.out.println("********* All Tickets *********\n\n");
+            for (Ticket ticket : tickets) {
 
+                System.out.println("Ticket ID: " + ticket.getTicketId());
+                System.out.println("Ticket Name: " + ticket.getTicketName());
+                System.out.println("Issue Description: " + ticket.getIssueDescription());
+                System.out.println("Customer name: " + ticket.getCustomerName());
+                System.out.println("Customer contact: " + ticket.getCustomerContact());
+                if (ticket.getStatus() == 1) {
+                    System.out.println("Ticket Status: " + TicketStatus.OPEN);
+                } else if (ticket.getStatus() == 2) {
+                    System.out.println("Ticket Status: " + TicketStatus.INPROGRESS);
+                } else {
+                    System.out.println("Ticket Status: " + TicketStatus.RESOLVED);
+                }
+
+                if (ticket.getPriority() == 1) {
+                    System.out.println("Ticket Priority: Low");
+                } else if (ticket.getPriority() == 2) {
+                    System.out.println("Ticket Priority: Medium");
+                } else {
+                    System.out.println("Ticket Priority: High");
+                }
+
+                if (ticket.getCategory() == 1) {
+                    System.out.println("Ticket Category: Mobile money service");
+                } else if (ticket.getCategory() == 2) {
+                    System.out.println("Ticket Category: Voice and Internet bundles");
+                } else {
+                    System.out.println("Ticket Category: Speak to one of us");
+                }
+                System.out.println("Agent Name: " + ticket.getAgentName());
+                System.out.println("\n");
+            }
+        }
     }
 
     @Override
     public void getTicketsOfStatus() {
+        System.out.println("Enter ticket status:");
+        System.out.println("1. Open");
+        System.out.println("2. In Progress");
+        System.out.println("3. Resolved");
+        int status = getValidIntegerInput2(scanner);
 
+        switch (status) {
+            case 1:
+                List<Ticket> tickets = ticketService.getTicketsOfStatus(TicketStatus.OPEN);
+                if (tickets.isEmpty()) {
+                    System.out.println("No tickets found");
+                } else {
+                    System.out.println("********* All Tickets of Status OPEN *********\n\n");
+                    for (Ticket ticket : tickets) {
+                        System.out.println("Ticket ID: " + ticket.getTicketId());
+                        System.out.println("Ticket Name: " + ticket.getTicketName());
+                        System.out.println("Issue Description: " + ticket.getIssueDescription());
+                        System.out.println("Customer name; " + ticket.getCustomerName());
+                        System.out.println("Customer contact: " + ticket.getCustomerContact());
+                        System.out.println("Ticket Status: " + TicketStatus.OPEN);
+                        if (ticket.getPriority() == 1) {
+                            System.out.println("Ticket Priority: Low");
+                        } else if (ticket.getPriority() == 2) {
+                            System.out.println("Ticket Priority: Medium");
+                        } else {
+                            System.out.println("Ticket Priority: High");
+                        }
+
+                        if (ticket.getCategory() == 1) {
+                            System.out.println("Ticket Category: Mobile money service");
+                        } else if (ticket.getCategory() == 2) {
+                            System.out.println("Ticket Category: Voice and Internet bundles");
+                        } else {
+                            System.out.println("Ticket Category: Speak to one of us");
+                        }
+
+                        System.out.println("Agent Name: " + ticket.getAgentName());
+                        System.out.println("\n");
+                    }
+                }
+                break;
+            case 2:
+                List<Ticket> tickets2 = ticketService.getTicketsOfStatus(TicketStatus.INPROGRESS);
+                if (tickets2.isEmpty()) {
+                    System.out.println("No tickets found");
+                } else {
+                    System.out.println("********* All Tickets of Status INPROGRESS*********\n\n");
+                    for (Ticket ticket : tickets2) {
+                        System.out.println("Ticket ID: " + ticket.getTicketId());
+                        System.out.println("Ticket Name: " + ticket.getTicketName());
+                        System.out.println("Issue Description: " + ticket.getIssueDescription());
+                        System.out.println("Customer name; " + ticket.getCustomerName());
+                        System.out.println("Customer contact: " + ticket.getCustomerContact());
+                        System.out.println("Ticket Status: " + TicketStatus.INPROGRESS);
+                        if (ticket.getPriority() == 1) {
+                            System.out.println("Ticket Priority: Low");
+                        } else if (ticket.getPriority() == 2) {
+                            System.out.println("Ticket Priority: Medium");
+                        } else {
+                            System.out.println("Ticket Priority: High");
+                        }
+
+                        if (ticket.getCategory() == 1) {
+                            System.out.println("Ticket Category: Mobile money service");
+                        } else if (ticket.getCategory() == 2) {
+                            System.out.println("Ticket Category: Voice and Internet bundles");
+                        } else {
+                            System.out.println("Ticket Category: Speak to one of us");
+                        }
+
+                        System.out.println("Agent Name: " + ticket.getAgentName());
+                        System.out.println("\n");
+                    }
+                }
+                break;
+            case 3:
+                List<Ticket> tickets3 = ticketService.getTicketsOfStatus(TicketStatus.RESOLVED);
+                if (tickets3.isEmpty()) {
+                    System.out.println("+------------------+");
+                    System.out.println("| No tickets found |");
+                    System.out.println("+------------------+");
+                } else {
+                    System.out.println("********* All Tickets of Status RESOLVED*********\n\n");
+                    for (Ticket ticket : tickets3) {
+                        System.out.println("Ticket ID: " + ticket.getTicketId());
+                        System.out.println("Ticket Name: " + ticket.getTicketName());
+                        System.out.println("Issue Description: " + ticket.getIssueDescription());
+                        System.out.println("Customer name; " + ticket.getCustomerName());
+                        System.out.println("Customer contact: " + ticket.getCustomerContact());
+                        System.out.println("Ticket Status: " + TicketStatus.RESOLVED);
+                        if (ticket.getPriority() == 1) {
+                            System.out.println("Ticket Priority: Low");
+                        } else if (ticket.getPriority() == 2) {
+                            System.out.println("Ticket Priority: Medium");
+                        } else {
+                            System.out.println("Ticket Priority: High");
+                        }
+
+                        if (ticket.getCategory() == 1) {
+                            System.out.println("Ticket Category: Mobile money service");
+                        } else if (ticket.getCategory() == 2) {
+                            System.out.println("Ticket Category: Voice and Internet bundles");
+                        } else {
+                            System.out.println("Ticket Category: Speak to one of us");
+                        }
+
+                        System.out.println("Agent Name: " + ticket.getAgentName());
+                        System.out.println("\n");
+                    }
+                }
+                break;
+            default:
+                System.out.println("Invalid choice please choose from the numbers given");
+        }
+    }
+
+    private Ticket findTicketById(int ticketId, List<Ticket> tickets) {
+        for (Ticket ticket : tickets) {
+            if (ticket.getTicketId() == ticketId) {
+                return ticket;
+            }
+        }
+        return null;
     }
 
     @Override
     public void updateTicket() {
+        System.out.println("Enter the ticket ID of the ticket to update:");
+        int ticketId;
+        Ticket foundTicket = null;
+        List<Ticket> ticketsList = ticketService.getAllTickets();
 
+        while (true) {
+            ticketId = getValidIntegerInput(scanner);
+            foundTicket = findTicketById(ticketId, ticketsList);
+
+            if (foundTicket != null) {
+                break;
+            } else {
+                System.out.println("Invalid ticket ID. Please enter a valid ticket number:");
+            }
+        }
+
+        if (foundTicket != null) {
+            System.out.println("Enter the updated ticket name:");
+            String ticketName = scanner.nextLine();
+            System.out.println("Enter the updated issue description:");
+            String issueDescription = scanner.nextLine();
+            System.out.println("Choose the updated ticket status:");
+            System.out.println("1. Open");
+            System.out.println("2. In Progress");
+            System.out.println("3. Resolved");
+            int status = getValidIntegerInput2(scanner);
+            System.out.println("Enter the updated customer name:");
+            String customerName = scanner.nextLine();
+            System.out.println("Enter the updated customer contact:");
+            String customerContact = scanner.nextLine();
+            System.out.println("Choose the updated ticket priority:");
+            System.out.println("1. Low");
+            System.out.println("2. Medium");
+            System.out.println("3. High");
+            int priority = getValidIntegerInput2(scanner);
+            System.out.println("Choose the updated ticket category:");
+            System.out.println("1. Mobile money service");
+            System.out.println("2. Voice and Internet bundles");
+            System.out.println("3. Speak to one of us");
+            int category = getValidIntegerInput2(scanner);
+            System.out.println("Enter the updated agent name:");
+            String agentName = scanner.nextLine();
+            System.out.println("+------------------------------+");
+            System.out.println("| Ticket updated successfully. |");
+            System.out.println("+------------------------------+");
+
+            Ticket updatedTicket = new Ticket(ticketId, ticketName, issueDescription, customerName, customerContact,
+                    status, priority, category, agentName);
+
+            ticketService.updateTicket(updatedTicket);
+        } else {
+            System.out.println("Ticket not found. Update failed.");
+        }
     }
 
     @Override
     public void deleteTicket() {
+        System.out.println("Enter the ticket ID of the ticket to delete:");
+        int ticketId = getValidIntegerInput(scanner);
+        // scanner.nextLine();
 
+        int index = -1;
+        List<Ticket> ticketsList = ticketService.getAllTickets();
+        for (int i = 0; i < ticketsList.size(); i++) {
+            if (ticketsList.get(i).getTicketId() == ticketId) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            ticketService.deleteTicket(index);
+            System.out.println("+------------------------------+");
+            System.out.println("| Ticket deleted successfully. |");
+            System.out.println("+------------------------------+");
+        } else {
+            System.out.println("Ticket not found. Delete failed.");
+        }
     }
 }
