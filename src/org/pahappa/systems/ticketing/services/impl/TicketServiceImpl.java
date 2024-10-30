@@ -33,27 +33,12 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public void updateTicket(Ticket updatedTicket) {
-        for (int i = 0; i < ticketsList.size(); i++) {
-            Ticket ticket = ticketsList.get(i);
-            if (ticket.getTicketId() == updatedTicket.getTicketId()) {
-
-                ticket.setTicketName(updatedTicket.getTicketName());
-                ticket.setIssueDescription(updatedTicket.getIssueDescription());
-                ticket.setCustomerName(updatedTicket.getCustomerName());
-                ticket.setCustomerContact(updatedTicket.getCustomerContact());
-                ticket.setStatus(updatedTicket.getStatus());
-                ticket.setPriority(updatedTicket.getPriority());
-                ticket.setCategory(updatedTicket.getCategory());
-                ticket.setAgentName(updatedTicket.getAgentName());
-            }
-        }
+        
     }
 
     @Override
     public void deleteTicket(int index) {
-        if (index >= 0 && index < ticketsList.size()) {
-            ticketsList.remove(index);
-        }
+        
     }
 
 }

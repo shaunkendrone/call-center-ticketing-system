@@ -310,94 +310,14 @@ public class TicketView implements BaseTicketView {
         }
     }
 
-    private Ticket findTicketById(int ticketId, List<Ticket> tickets) {
-        for (Ticket ticket : tickets) {
-            if (ticket.getTicketId() == ticketId) {
-                return ticket;
-            }
-        }
-        return null;
-    }
 
     @Override
     public void updateTicket() {
-        System.out.println("Enter the ticket ID of the ticket to update:");
-        int ticketId;
-        Ticket foundTicket = null;
-        List<Ticket> ticketsList = ticketService.getAllTickets();
-
-        while (true) {
-            ticketId = getValidIntegerInput(scanner);
-            foundTicket = findTicketById(ticketId, ticketsList);
-
-            if (foundTicket != null) {
-                break;
-            } else {
-                System.out.println("Invalid ticket ID. Please enter a valid ticket number:");
-            }
-        }
-
-        if (foundTicket != null) {
-            System.out.println("Enter the updated ticket name:");
-            String ticketName = scanner.nextLine();
-            System.out.println("Enter the updated issue description:");
-            String issueDescription = scanner.nextLine();
-            System.out.println("Choose the updated ticket status:");
-            System.out.println("1. Open");
-            System.out.println("2. In Progress");
-            System.out.println("3. Resolved");
-            int status = getValidIntegerInput2(scanner);
-            System.out.println("Enter the updated customer name:");
-            String customerName = scanner.nextLine();
-            System.out.println("Enter the updated customer contact:");
-            String customerContact = scanner.nextLine();
-            System.out.println("Choose the updated ticket priority:");
-            System.out.println("1. Low");
-            System.out.println("2. Medium");
-            System.out.println("3. High");
-            int priority = getValidIntegerInput2(scanner);
-            System.out.println("Choose the updated ticket category:");
-            System.out.println("1. Mobile money service");
-            System.out.println("2. Voice and Internet bundles");
-            System.out.println("3. Speak to one of us");
-            int category = getValidIntegerInput2(scanner);
-            System.out.println("Enter the updated agent name:");
-            String agentName = scanner.nextLine();
-            System.out.println("+------------------------------+");
-            System.out.println("| Ticket updated successfully. |");
-            System.out.println("+------------------------------+");
-
-            Ticket updatedTicket = new Ticket(ticketId, ticketName, issueDescription, customerName, customerContact,
-                    status, priority, category, agentName);
-
-            ticketService.updateTicket(updatedTicket);
-        } else {
-            System.out.println("Ticket not found. Update failed.");
-        }
+        
     }
 
     @Override
     public void deleteTicket() {
-        System.out.println("Enter the ticket ID of the ticket to delete:");
-        int ticketId = getValidIntegerInput(scanner);
-        // scanner.nextLine();
-
-        int index = -1;
-        List<Ticket> ticketsList = ticketService.getAllTickets();
-        for (int i = 0; i < ticketsList.size(); i++) {
-            if (ticketsList.get(i).getTicketId() == ticketId) {
-                index = i;
-                break;
-            }
-        }
-
-        if (index != -1) {
-            ticketService.deleteTicket(index);
-            System.out.println("+------------------------------+");
-            System.out.println("| Ticket deleted successfully. |");
-            System.out.println("+------------------------------+");
-        } else {
-            System.out.println("Ticket not found. Delete failed.");
-        }
+       
     }
 }
